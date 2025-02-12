@@ -10,7 +10,7 @@
     <td>{{ post.rowNum }}</td>
     <td @click="goDetail(post.idx)">{{ post.subject }}</td>
     <td>{{ post.regId }}</td>
-    <td>{{ post.regDt }}</td>
+    <td>{{ post.regDtStr }}</td>
   </tr>
 
 

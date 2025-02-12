@@ -5,7 +5,7 @@
   <div v-if="post && post.subject" class="container">
     <h1>{{ post.subject }}</h1>
     <p><strong>작성자:</strong> {{ post.regId }}</p>
-    <p><strong>작성일:</strong> {{ post.regDtStr }}</p>
+    <p><strong>작성일:</strong> {{ post.regDt }}</p>
     <div class="content">
       {{ post.content }}
     </div>
@@ -36,7 +36,7 @@ export default {
   methods: {
     getPostDetail(){
       
-      const URL = "http://localhost:9090/api/board/getBoard";
+      const URL = "http://localhost:9090/api/board/getDetail";
       this.$axios
         .post(URL, { 
             //body

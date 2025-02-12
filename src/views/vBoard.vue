@@ -20,7 +20,13 @@
             </tbody>
         </table>
 
+        <div class="bottom-write-btn">
+            <button class="write-btn" @click="writeBoard">글 작성</button>
+        </div>
+
 		<vPagination :totalPage="totalPage" :currentPage="getCurPage" :pageSize="6" @change-page="doPaging"/>
+
+        
 		
     </div>
 </template>
@@ -98,6 +104,9 @@ export default{
 
         },
 
+        writeBoard() {
+            this.$router.push({ path: "/board/write" });
+        }
         
 
     },
@@ -138,6 +147,28 @@ export default{
   background-color: #f1f1f1;
 }
 
+.write-btn {
+  background-color: #42b883;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.write-btn:hover {
+  background-color: #369f6f;
+}
+
+/* 하단 버튼 */
+.bottom-write-btn {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
 
 
 </style>
