@@ -1,9 +1,12 @@
 <template>
+  
+
   <commHeader/>
   <commNav/>
   
 
   <div class="main-layout">
+    
     <commLeft/>
 
     <!-- <div class="main-content">
@@ -31,6 +34,11 @@ import commFooter from './components/common/commFooter.vue'
 
 export default {
   name: 'App',
+  data(){
+    return{
+      overlay : this.$store.state.overlay
+    }
+  },  
   components: {    
 
     commHeader,
@@ -40,6 +48,7 @@ export default {
     commFooter
 
   }
+
 }
 </script>
 

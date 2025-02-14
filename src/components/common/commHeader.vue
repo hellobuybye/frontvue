@@ -6,6 +6,7 @@
 		</div>
 		
 	</header>
+	
 </template>
 
 <script>

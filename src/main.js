@@ -7,8 +7,13 @@ import axios from 'axios'
 
 // vue.prototype.$axios = axios;   // global Var : this.$axios
 
+import vuetify from './plugins/vuetify'
+import store from './store'
+
 const app = createApp(App);
 app.use(router);
+app.use(vuetify);
+app.use(store)
 
 // Axios 기본 URL 설정
 // axios.defaults.baseURL = 'https://api.example.com'; // API의 기본 URL

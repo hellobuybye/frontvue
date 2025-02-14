@@ -1,10 +1,15 @@
 <template>
+     
+    
+        
 
     <div class='vBoard'>
+        
+
         <h2 class="title">기본 게시판</h2>
 
 
-		<table class="board">
+        <table class="board">
             <thead>
                 <tr>
                     <th>#</th>
@@ -15,8 +20,8 @@
                 </tr>
             </thead>
             <tbody>
-				<vPost v-for="post in postList" :key="post.id" :post="post"></vPost>
-				
+                <vPost v-for="post in postList" :key="post.id" :post="post"></vPost>
+                
             </tbody>
         </table>
 
@@ -24,11 +29,12 @@
             <button class="write-btn" @click="writeBoard">글 작성</button>
         </div>
 
-		<vPagination :totalPage="totalPage" :currentPage="getCurPage" :pageSize="6" @change-page="doPaging"/>
-
-        
-		
+        <vPagination :totalPage="totalPage" :currentPage="getCurPage" :pageSize="6" @change-page="doPaging"/>
+                    
     </div>
+    <v-overlay :model-value="overlay" class="align-center justify-center">
+      <v-progress-circular color="primary" size="64" indeterminate></v-progress-circular>        
+  </v-overlay>
 </template>
 
 <script>
@@ -43,6 +49,7 @@ export default{
 		vPost,
 		vPagination,        
 	},
+    
     data() {
         return {
             // postList : [
@@ -56,7 +63,8 @@ export default{
             postList : [],
             
             totalPage:0,
-            currentPage: 1,
+            currentPage: 1,     
+            
         }
     },
 	setup(){		
@@ -73,7 +81,12 @@ export default{
 
             // let page = this.$route.query.page;
             // return page && !isNaN(page) ? Number(page) : 1; 
-        }       
+        },    
+        
+        // Vuex의 overlay 상태 가져오기
+        overlay() {            
+            return this.$store.state.overlay;
+        },
     },
     methods: {
         doPaging(page){
@@ -84,6 +97,9 @@ export default{
         },
 
         getPostList(){
+            console.log('test : ' + this.overlay)
+            this.$store.commit('overlayOn');
+
             const URL = "http://localhost:9090/api/board/getList";
             this.$axios
                 .get(URL,{
@@ -96,6 +112,8 @@ export default{
                 })
                 .then( res => {
                     console.log('getList result : ', res);
+                    // this.$store.commit('overlayOff');
+
                     this.postList = res.data.body;
 
                     this.totalPage = res.data.pagingInfo.finalPage;
