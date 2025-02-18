@@ -35,9 +35,7 @@ import commFooter from './components/common/commFooter.vue'
 export default {
   name: 'App',
   data(){
-    return{
-      overlay : this.$store.state.overlay
-    }
+    
   },  
   components: {    
 

@@ -29,12 +29,15 @@
             <button class="write-btn" @click="writeBoard">글 작성</button>
         </div>
 
-        <vPagination :totalPage="totalPage" :currentPage="getCurPage" :pageSize="6" @change-page="doPaging"/>
-                    
+        <vPagination :totalPage="totalPage" :currentPage="pageVal" :pageSize="6" @change-page="doPaging"/>
+        
     </div>
-    <v-overlay :model-value="overlay" class="align-center justify-center">
-      <v-progress-circular color="primary" size="64" indeterminate></v-progress-circular>        
-  </v-overlay>
+    <!-- <v-overlay :model-value="overlay" class="align-center justify-center">
+      <v-progress-circular color="primary" size="64" indeterminate></v-progress-circular>            
+    </v-overlay> -->
+
+    <!-- <v-overlay v-model="overlay"></v-overlay> -->
+     
 </template>
 
 <script>
@@ -52,36 +55,38 @@ export default{
     
     data() {
         return {
-            // postList : [
-
-			// 	{ idx: 0, subject: "게시판 샘플 1", regId: "홍길동", regDt: "2024-10-15" },
-			// 	{ pId: 1, title: "게시판 샘플 2", writter: "이몽룡", pDate: "2024-10-16" },
-			// 	{ pId: 2, title: "게시판 샘플 3", writter: "춘향", pDate: "2024-10-17" },
-			// 	{ pId: 3, title: "게시판 샘플 4", writter: "박혁거세", pDate: "2024-10-18" },
-
-			// ],
-            postList : [],
-            
+            postList : [],            
             totalPage:0,
-            currentPage: 1,     
-            
+            pageVal : 1,
         }
     },
 	setup(){		
-       // setup에서 선언된 모든 데이터들은 template에서 사용 가능하다.
 
+        return{};
+    
 	},
+    // beforeRouteUpdate(to, from, next) {
+    //     console.log("🔄 beforeRouteUpdate 감지:", to.fullPath);
+    //     next(); // 이게 없으면 URL 변경이 안 됨!
+    // },
+    watch: {
+        overlay (val) {
+            val && setTimeout(() => {
+            this.overlay = false
+            }, 2000)
+        },
+    },
+
     computed:{
 
-        getCurPage(){
+        // getCurPage(){
+        //     let page = this.pageVal;            
+        //     page = ( page ? Number(page)  : 1 ); // undefined 체크
+        //     return page;
 
-            let page = this.$route.query.page;            
-            page = ( page ? Number(page)  : 1 );
-            return page;
-
-            // let page = this.$route.query.page;
-            // return page && !isNaN(page) ? Number(page) : 1; 
-        },    
+        //     // let page = this.$route.query.page;
+        //     // return page && !isNaN(page) ? Number(page) : 1; 
+        // },    
         
         // Vuex의 overlay 상태 가져오기
         overlay() {            
@@ -89,15 +94,32 @@ export default{
         },
     },
     methods: {
-        doPaging(page){
-            this.currentPage = page;
+        doPaging(newPage){
+            // console.log('doPaging(), newPage : ' + newPage);
 
-            this.getPostList();
-            this.$router.push({query: { page: this.currentPage } } );
+            // this.$router.push({query: { page: newPage } } )
+            // .then(() =>{
+            //     this.pageVal = newPage;
+            //     this.getPostList();
+            // })
+            // .catch(() => {
+            //     console.log('router push query fail !!')
+            // });
+
+            this.$router.push({query: { page: newPage } }).then(() => {
+                this.$nextTick(() => {
+                    this.pageVal = newPage;
+                    this.getPostList();
+                    
+                });
+            });
+            
+            
         },
 
         getPostList(){
-            console.log('test : ' + this.overlay)
+            
+            // console.log('getPostList() , page : ' + this.pageVal);
             this.$store.commit('overlayOn');
 
             const URL = "http://localhost:9090/api/board/getList";
@@ -107,12 +129,12 @@ export default{
                         'Content-Type': 'application/json',
                     },
                     params:{
-                        page:this.currentPage
+                        page: this.pageVal
                     },
                 })
                 .then( res => {
-                    console.log('getList result : ', res);
-                    // this.$store.commit('overlayOff');
+                    // console.log('getList result : ', res);
+                    this.$store.commit('overlayOff');
 
                     this.postList = res.data.body;
 
@@ -192,3 +214,5 @@ export default{
 </style>
 
 
+
+  
