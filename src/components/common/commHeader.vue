@@ -4,7 +4,9 @@
 			<a href="/" ><img alt="Vue logo" src="../../assets/logo.png"></a>
 			<span class="title">윤환이의 놀이터</span>
 		</div>
-		
+		<nav>
+			<router-link to="/login" >로그인</router-link>
+		</nav>
 	</header>
 	
 </template>
@@ -29,8 +31,11 @@ export default{
 	header{
 		width:100%; 
 		border-bottom:1px solid #35495e;
-		padding-top: 20px;		
-		padding-bottom: 20px;		
+		padding: 20px;		
+			
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
 	}
 
 	header a{
