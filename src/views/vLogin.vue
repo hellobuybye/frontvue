@@ -65,7 +65,8 @@ export default {
                         'Content-Type': 'application/json',
                     }
             }).then(res =>{
-                console.log('reqLogin result : ' + res);
+                console.log('reqLogin result : ');
+                console.log(res);
 
             }).catch(error => {
                 alert('Login Error !!\n Error : ' + error)
