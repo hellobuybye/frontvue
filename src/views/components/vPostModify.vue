@@ -36,7 +36,7 @@ export default {
   methods: {
     getPostDetail(){
       
-      const URL = "http://localhost:9090/api/board/getDetail";
+      const URL = "/api/board/getDetail";
       this.$axios
         .post(URL, { 
             //body

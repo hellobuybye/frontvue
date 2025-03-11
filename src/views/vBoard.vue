@@ -139,33 +139,26 @@ export default {
         },
 
         // 리스트 요청 함수
-        async getPostList(pageVal) {
+        getPostList(pageVal) {
 
-            // console.log('getPostList() , page : ' + this.pageVal);
             this.$store.commit('overlayOn');
-
-            const URL = "http://localhost:9090/api/board/getList";
-            await this.$axios.get(URL, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    params: {
-                        page: pageVal
-                    },
-                })
-                .then(res => {
-                    console.log('getList result : ', res);                    
-
-                    this.postList = res.data.body;
-
-                    this.totalPage = res.data.pagingInfo.finalPage;
-
-                })
-                .catch(() => {
-                    alert('getPostList() Error !!');
-                });
-
-            this.$store.commit('overlayOff');
+            
+            this.$axios.get("/api/board/getList", {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                params: {
+                    page: pageVal
+                },
+            }).then(res => {
+                console.log(`getList result : ${res}`);
+                this.postList = res.data.body;
+                this.totalPage = res.data.pagingInfo.finalPage;
+            }).catch(err => {
+                alert(`getPostList() Error !! ${err}`);
+            }).finally(()=>{
+                this.$store.commit('overlayOff');
+            });
 
         },
 

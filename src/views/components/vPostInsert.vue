@@ -45,7 +45,7 @@ export default {
   methods: {
     insertPost(){
       
-      const URL = "http://localhost:9090/api/board/insertBoard";
+      const URL = "/api/board/insertBoard";
       this.$axios
         .post(URL, this.post, {
             headers: {

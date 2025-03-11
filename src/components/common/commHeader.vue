@@ -4,20 +4,33 @@
 			<a href="/" ><img alt="Vue logo" src="../../assets/logo.png"></a>
 			<span class="title">윤환이의 놀이터</span>
 		</div>
-		<nav>
+		<nav v-if="user">
+			{{ user.name }} 님 , <a @click="logout">로그아웃</a>
+		</nav>
+		<nav v-else>
 			<router-link to="/login" >로그인</router-link>
 		</nav>
 	</header>
 	
 </template>
 
-<script>
+<script scoped>
+import { mapGetters } from 'vuex';
+import { mapActions } from 'vuex';
+
 export default{
     name:'commHeader',
     data() {
-        
+		return{
+			
+		}
     },
+	computed:{
+		...mapGetters(['user'])
+	},
     methods: {
+
+		...mapActions(["logout"]),
         
     },
     created() {

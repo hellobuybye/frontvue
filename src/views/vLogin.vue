@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 
 export default {
     name: 'vLogin',
@@ -50,29 +51,22 @@ export default {
     },
     methods: {
 
-        async reqLogin() {
+        ...mapActions(["login"]),
+
+        reqLogin() {
             
             this.reqLoginFlag = true;
             
-            const URL = "http://localhost:9090/api/login/proc";
-            
-            await this.$axios.post(URL, 
-                {
-                    userId: this.inputId,
-                    password: this.inputPw,                     
-                },{
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-            }).then(res =>{
-                console.log('reqLogin result : ');
-                console.log(res);
-
-            }).catch(error => {
-                alert('Login Error !!\n Error : ' + error)
-            });
-
-            this.reqLoginFlag = false;
+            this.login({ inputId: this.inputId, inputPw: this.inputPw })
+            .then(res=>{
+                console.log(`login success : ${res}`);                               
+            })
+            .catch(error =>{
+                console.log(`login fail : ${error}`);               
+            })
+            .finally(()=>{
+                this.reqLoginFlag = false;
+            }); 
 
         },
     },
