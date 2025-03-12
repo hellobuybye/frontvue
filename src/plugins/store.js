@@ -74,8 +74,31 @@ const store = createStore({
       }
       
     },
+
     async logout({commit}){
-      commit("logout");
+      
+      try{
+        const res = await axios.post("/api/logout", 
+          {}
+        )
+
+        if(res.status && res.status === 200){
+          console.log('reqLogout success : ');
+          console.log(res);
+
+          commit("logout");  
+
+          return true;
+        }        
+
+      }catch(err){
+        alert('로그아웃에 실패했습니다');
+        console.log('Logout Error !!');
+        console.log(err);
+
+        return false;
+      }
+      
     },
   },
   getters: { // 상태를 기반으로 계산된 값을 반환 (computed와 비슷하게 동작)

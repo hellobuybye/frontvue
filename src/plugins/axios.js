@@ -10,6 +10,7 @@ const api = axios.create({
   }
 });
 
+let refreshable = true; // 리프레시 중인지 체크하는 값
 
 api.interceptors.response.use(
   response => response,
@@ -19,64 +20,60 @@ api.interceptors.response.use(
 
     if (error.response.status === 401) {
       
-      if(error.response.data ==='LOGIN_001'){ 
+      if(error.response.data ==='NO_TOKEN'){
+        // 로그인 필요
+        alert('로그인 필요');
+
+        store.commit("logout");        
+        router.push({ path: "/login" });
+        return Promise.reject(error);
+      }
+
+      if(error.response.data ==='AUTH_FAIL'){ 
         // 로그인 실패 - 아이디 또는 비밀번호 틀림       
+        alert('로그인 실패');
         return Promise.reject(error);
       }
       
-      // if(store.state.user == null){
-      //   // 로그인 필요
-      //   alert('로그인이 필요합니다.');        
-      //   router.push({ path: "/login" });
-      //   return Promise.reject(error);
-      // }
-
-      console.log("!!! 액세스 토큰 만료됨, 리프레시 시작");
       
-      try {        
-        const res = await api.post("/api/login/refresh", {
+      console.log("!!! 액세스 토큰 에러, 리프레시 시도");  
+      
+      if( refreshable ){
+        refreshable = false;
 
-        });
-        
-        store.commit("setAccessToken", res.data.accessToken); // 새 토큰 저장                
-        error.config.headers["Authorization"] = `Bearer ${res.data.accessToken}`;
-        console.log("🔄 토큰 교체 완료");
-        return axios(error.config); // 원래 요청 다시 시도
+        try {                 
 
-      } catch (err) {
-        alert("❌ 리프레시 실패, 재로그인 필요");
-        if(err.response?.status === 401){ 
-          console.log('test');
+          const res = await api.post("/api/login/refresh", {});
+          
+          store.commit("setAccessToken", res.data.accessToken); // 새 토큰 저장      
+          store.commit('setUser', res.data.user);       
+          console.log("🔄 토큰 교체 완료");
+  
+          error.config.headers["Authorization"] = `Bearer ${res.data.accessToken}`;
+          return axios(error.config); // 원래 요청 다시 시도
+  
+        } catch (err) {
+          
+          if(err.response?.status === 401 && err.response?.data ==='INVALID_TOKEN'){           
+            alert("재 로그인 필요");
+            console.log("❌ 리프레시 실패,  토큰에 이상이 있습니다. ❌" );
+            store.commit("logout");
+            router.push({ path: "/login" });
+            return Promise.reject(err);
+          }        
+          
+        } finally{
+          refreshable = true;
         }
-        
-        store.commit("logout");
-        router.push({ path: "/login" });
-        return Promise.reject(err);
+
       }
+      
 
       
     }
 
-    console.log('이 코드까지 오면 안되는데? (axios.js)');
-    return Promise.reject(error);
     
-
-    // if (error.response.status === 403) {
-    //   console.log("🔄 액세스 토큰 만료됨, 리프레시 시작");      
-       
-    //   await axios.post("/api/auth/refresh", {}, { withCredentials: true })
-    //       .then(res => {
-    //         store.commit("setAccessToken", res.data.accessToken); // 새 토큰 저장
-    //         error.config.headers["Authorization"] = `Bearer ${res.data.accessToken}`;
-    //         console.log('토큰 refresh 성공 !! ');
-    //         return axios(error.config); // 원래 요청 다시 시도
-    //       })
-    //       .catch(error =>{
-    //         alert("❌ 리프레시 실패, 재로그인 필요");
-    //         store.commit("logout");
-    //         return Promise.reject(error);
-    //       });
-    // }
+    return Promise.reject(error);  
     
   }
 );
