@@ -43,7 +43,7 @@ api.interceptors.response.use(
 
         try {                 
 
-          const res = await api.post("/api/login/refresh", {});
+          const res = await api.post("/api/user/refresh", {});
           
           store.commit("setAccessToken", res.data.accessToken); // 새 토큰 저장      
           store.commit('setUser', res.data.user);       
@@ -53,10 +53,10 @@ api.interceptors.response.use(
           return axios(error.config); // 원래 요청 다시 시도
   
         } catch (err) {
-          
+          console.log("❌ 리프레시 실패 ❌" );
           if(err.response?.status === 401 && err.response?.data ==='INVALID_TOKEN'){           
             alert("재 로그인 필요");
-            console.log("❌ 리프레시 실패,  토큰에 이상이 있습니다. ❌" );
+            console.log("토큰에 이상이 있습니다.");
             store.commit("logout");
             router.push({ path: "/login" });
             return Promise.reject(err);

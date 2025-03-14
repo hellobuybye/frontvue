@@ -45,7 +45,7 @@ const store = createStore({
     async login({ commit }, {inputId, inputPw}) {
     
       try{
-        const res = await axios.post("/api/login/proc", 
+        const res = await axios.post("/api/user/login", 
           {
               userId: inputId,
               password: inputPw,                     
@@ -78,7 +78,7 @@ const store = createStore({
     async logout({commit}){
       
       try{
-        const res = await axios.post("/api/logout", 
+        const res = await axios.post("/api/user/logout", 
           {}
         )
 
